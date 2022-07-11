@@ -6,7 +6,8 @@ const app = express();
 const PORT = 8080;
 
 // import dbConection
-const dbConnection = require("./db")
+// get me the dbConnection key off the object using destructuring {}
+const {dbConnection} = require("./db")
 
 const startServer = async () => {
     // checks for matching the associations with models in db & syncs with db
@@ -27,6 +28,7 @@ app.use(express.json());
 // in case we get urlencoded data:
 app.use(express.urlencoded({extended:false}))
 
+// require in inputs from specific routes
 const genresRouter = require("./routes/genre"); 
 // any request method to any url that starts with /genre, goes into genre router
 app.use("/genre", genresRouter)

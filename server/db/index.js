@@ -70,3 +70,11 @@ const Genre = dbConnection.define("genre", {
 // set associations
 Movie.belongsToMany(Genre, {through: "movies_genres" });
 Genre.belongsToMany(Movie, {through: "movies_genres"})
+
+// export out my dbConnections & models
+// could also be module.exports = {dbConnection, Movie, Genre}
+module.exports = {
+    dbConnection: dbConnection,
+    Movie: Movie,
+    Genre: Genre
+}
