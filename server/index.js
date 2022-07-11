@@ -19,6 +19,17 @@ const startServer = async () => {
 
 startServer()
 
+// **MIDDLEWARE**
+
+// to be able to get the body from the requests & req.body will be available
+// in case we get json data:
+app.use(express.json());
+// in case we get urlencoded data:
+app.use(express.urlencoded({extended:false}))
+
+const genresRouter = require("./routes/genre"); 
+// any request method to any url that starts with /genre, goes into genre router
+app.use("/genre", genresRouter)
 
 
 app.get("/", (req, res) => {
