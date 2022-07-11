@@ -33,6 +33,9 @@ const genresRouter = require("./routes/genre");
 // any request method to any url that starts with /genre, goes into genre router
 app.use("/genre", genresRouter)
 
+const moviesRouter = require("./routes/movies");
+app.use("/movies", moviesRouter)
+
 
 app.get("/", (req, res) => {
     res.send("Hello :)")
