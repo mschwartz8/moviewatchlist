@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Add a movie to your watchlist</title>
+</head>
+<body>
+    <h1>Add Movie</h1>
+    <form method="POST" action="/movies">
+        <div>
+            <lable>Title:</lable>
+            <input type="text" name="title" />
+        </div>
+        <div>
+            <label>IMDB link:</label>
+            <input type="text" name="link" placeholder="optional" /> 
+        </div>
+        <div>
+            <select name="genres">
+                <option></option>
+                <option value=1>Horror</option>
+                <option value=1>Comedy</option>
+            </select>
+            <select name="genres">
+                <option></option>
+                <option value=1>Horror</option>
+                <option value=1>Comedy</option>
+            </select>
+        </div>
+        <button type="submit">submit</button>
+    </form>
+</body>
+</html>
