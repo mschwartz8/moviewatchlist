@@ -50,13 +50,13 @@ const Movie = dbConnection.define("movie", {
         validate: {
             isUrl: true
         },
-        watched: {
+
+    },
+    watched: {
             type: Sequelize.DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false
-        }
-        
-    }
+        }, 
 })
 
 const Genre = dbConnection.define("genre", {
