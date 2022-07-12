@@ -23,18 +23,20 @@ router.get("/", async (req, res) => {
             <!DOCTYPE html>
             <html>
                 <head><title>Movie List</title></head>
+                <link rel="stylesheet" type="text/css" href="/movie-list-style.css" />
                 <body>
                 <h1>Movie List </h1>
                 <ul>
                 ${allMovies.map(movie => {
                    return `
-                    <li>
+                    <li class="${movie.watched === true ? "watched" : ""}">
                         <h2>${movie.title}</h2>
                         ${movie.imbdLink ? `<a target="_blank" href="${movie.imbdLink}">IMBD profile </a>` : ""}
                         <ul>
-                        ${movie.genres.map(genre => `<li>${genre.name}</li>`).join(" ")}
+                            ${movie.genres.map(genre => `<li>${genre.name}</li>`).join(" ")}
                         </ul>
-                    
+                        ${movie.watched === false ? `<a href="/movies/${movie.id}/mark-watched"> I watched this. </a>` : ""}
+
                     </li>
                    `
                 }).join(" ")}
