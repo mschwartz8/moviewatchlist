@@ -14,8 +14,39 @@ const Genre = obj.Genre:
 const {Genre, Movie} = require("../db")
 
 
-router.get("/", (req, res) => {
-    res.send('movie list haha')
+router.get("/", async (req, res) => {
+    try {
+
+        const allMovies = await Movie.findAll({include: [Genre]})
+        res.send(
+            `
+            <!DOCTYPE html>
+            <html>
+                <head><title>Movie List</title></head>
+                <body>
+                <h1>Movie List </h1>
+                <ul>
+                ${allMovies.map(movie => {
+                   return `
+                    <li>
+                        <h2>${movie.title}</h2>
+                        ${movie.imbdLink ? `<a target="_blank" href="${movie.imbdLink}">IMBD profile </a>` : ""}
+                        <ul>
+                        ${movie.genres.map(genre => `<li>${genre.name}</li>`).join(" ")}
+                        </ul>
+                    
+                    </li>
+                   `
+                }).join(" ")}
+                </ul>
+                </body>
+            `
+        )
+
+    } catch (e) {
+        next(e)
+    }
+    
 })
 
 // GET /movies/add-movie
