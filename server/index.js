@@ -17,8 +17,11 @@ const startServer = async () => {
         console.log(`server is runnong on port ${PORT}`)
     })
 }
-
 startServer()
+
+
+// matches any url for a get request to a pussible file in the public directory 
+app.use(express.static(__dirname + "/public"))
 
 // **MIDDLEWARE**
 

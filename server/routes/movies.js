@@ -24,6 +24,7 @@ router.get("/add-movie", async (req, res) => {
     // express method sendFile that allows you to send back a specific file 
     // __dirname is current directory name editing in (routes dir) + specific part
     // res.sendFile(__dirname + "/views/movie-form.html")
+    const allOfMyGenres = await Genre.findAll();
     res.send(`
     <!DOCTYPE html>
     <html lang="en">
