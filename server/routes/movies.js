@@ -17,7 +17,7 @@ const {Genre, Movie} = require("../db")
 router.get("/", async (req, res) => {
     try {
 
-        const allMovies = await Movie.findAll({include: [Genre]})
+        const allMovies = await Movie.findAll({include: [Genre], order: [["title", "ASC"]]})
         res.send(
             `
             <!DOCTYPE html>
