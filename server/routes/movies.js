@@ -14,7 +14,7 @@ const Genre = obj.Genre:
 const {Genre, Movie} = require("../db")
 
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
 
         const allMovies = await Movie.findAll({include: [Genre], order: [["title", "ASC"]]})
@@ -53,7 +53,7 @@ router.get("/", async (req, res) => {
 
 // GET /movies/add-movie
 // respond with HTML text to be rendered by the browser that will show a form
-router.get("/add-movie", async (req, res) => {
+router.get("/add-movie", async (req, res, next) => {
     // express method sendFile that allows you to send back a specific file 
     // __dirname is current directory name editing in (routes dir) + specific part
     // res.sendFile(__dirname + "/views/movie-form.html")
@@ -94,6 +94,31 @@ router.get("/add-movie", async (req, res) => {
     </body>
     </html>
 `);
+})
+
+router.get("/:movieId/mark-watched", async (req, res, next) => {
+    const id = req.params.movieId;
+    console.log(id, 'THE MOVIE!!!!!!')
+    try {
+        const theMovie = await Movie.findByPk(id);
+        
+        if (!theMovie){
+            res.status(404).send('no movie with that id')
+        }
+
+        // setting that specific movie in the db to true
+        theMovie.watched = true;
+
+        // saving that change
+        await theMovie.save()
+
+        res.redirect("/movies")
+
+    } catch (e) {
+        next(e)
+    }
+
+
 })
 
 // POST /movies
