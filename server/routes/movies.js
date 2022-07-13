@@ -87,7 +87,7 @@ router.get("/", async (req, res, next) => {
                             ${movies.map((movie) => {
                                 return `
                                     <li class="${movie.watched === true ? "watched": ""}">
-                                        <h2>${movie.title} ${movie.imdbLink ? `<a target="_blank" href="${movie.imdbLink}">IMDB</a>` : ""}</h2>
+                                        <h2>${movie.title} ${movie.imbdLink ? `<a class='imbd-link' target="_blank" href="${movie.imbdLink}">IMDB</a>` : ""}</h2>
 
                                         <ul class="genres-list">
                                             ${movie.genres.map(genre => {

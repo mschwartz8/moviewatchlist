@@ -1,0 +1,78 @@
+
+* {
+    box-sizing: border-box
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+    background: black;
+    color: rgb(233, 216, 216)
+}
+
+body {
+    padding-left: 40px; 
+}
+
+.imbd-link {
+    font-size: 15px;
+    font-style: italic;
+    color: green;
+}
+
+a {
+    font-weight: bold;
+    color: rgb(238, 224, 224);
+}
+
+a:visited {
+    font-weight: light;
+    color: rgb(238, 222, 222);
+}
+
+ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+nav a {
+    margin-right: 20px;
+}
+
+h1 {
+    margin-bottom: 0;
+    color: goldenrod;
+}
+
+
+#list-of-movies > li {
+    background: rgb(100, 97, 97);
+    width: 90%;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+#list-of-movies > li h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.genres-list {
+    width: 400px;
+    display: flex;
+}
+
+.genres-list li {
+    margin-right: 20px;
+}
+
+.watch-link {
+    display: block;
+    font-size: 15px;
+    margin-top: 10px;
+    margin-right: 5px;
+    text-align: right;
+    font-style: italic;
+}
+
