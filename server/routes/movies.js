@@ -111,6 +111,36 @@ router.get("/", async (req, res, next) => {
     
 })
 
+router.get("/feeling-lucky", async (req, res, next) => {
+    try {
+
+        // get all unwatched movies from database & then pick random one from arr
+        const unwatchedMovies = await Movie.findAll({where: {watched: false}})
+        const amountOfUnwatchedMovies = unwatchedMovies.length;
+        // random number between 1 and length of unwatched movies length -1
+        const randomNumber = Math.floor(Math.random() * amountOfUnwatchedMovies);
+        const chosenMovie = unwatchedMovies[randomNumber] // used as index 
+        res.send(
+            `
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Your Chosen Movie</title>
+                    <link rel="stylesheet" type="text/css" href="/base-styling.css" />
+                </head>
+                <body>
+                    <h1>You should watch: ${chosenMovie.title}</h1>
+                    <a href="/movies">Back to list</a>
+                    <a href="/movies/feeling-lucky">Try Again</a>
+                </body>
+            </html>
+        `
+        )
+    } catch (e) {
+        next(e)
+    }
+})
+
 // GET /movies/add-movie
 // respond with HTML text to be rendered by the browser that will show a form
 router.get("/add-movie", async (req, res, next) => {
