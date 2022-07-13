@@ -15,35 +15,95 @@ const {Genre, Movie} = require("../db")
 
 
 router.get("/", async (req, res, next) => {
+
+    // to filter by unwatched, if unwatched === true, then set watched to false
+    // in the query, set where to the value whereClause
+    // when you put in http://localhost:8080/movies?unwatched=1 it will only show movies that are unwatched 
+    const onlyUnwatched = req.query.unwatched === "1";
+    const genreName = req.query.genre;
+
+    const whereClause = {};
+
+    if (onlyUnwatched === true) {
+        whereClause.watched = false;
+    }
+
     try {
+        // if they are using the query to filter by genre, we'll follow the following code to find specificGenre type
+        let movies;
+        if (genreName) {
+ 
+        // finds Genre by name in genre table
+        const specificGenre = await Genre.findOne({
+                where: {
+                    name: genreName
+                }
+            });
+            // if genre doesn't exist, then send bakc unknown genre
+            if (!specificGenre) {
+                res.status(404).send("Unknown genre");
+                return;
+            }
+            // Then query the movies using a magic method that will find movies by genre, sorted by title & asc
+            // includes whereClause in case you want the information about watched/unwatched
+            // http://localhost:8080/movies?genre=drama&unwatched=1   shows you the movies with drama genre that are unwatched
+            movies = await specificGenre.getMovies({
+                include: [Genre],
+                order: [
+                    ["title", "ASC"]
+                ],
+                where: whereClause
+            });
 
-        const allMovies = await Movie.findAll({include: [Genre], order: [["title", "ASC"]]})
+        } else {
+                 // if you are not looking for a specific genre, then just finda all the movies & include their genres
+            // sorted by title in asc order
+            movies = await Movie.findAll({
+                include: [Genre],
+                order: [
+                    ["title", "ASC"]
+                ],
+                where: whereClause
+            });
+        }
+   
         res.send(
-            `
-            <!DOCTYPE html>
-            <html>
-                <head><title>Movie List</title></head>
-                <link rel="stylesheet" type="text/css" href="/movie-list-style.css" />
-                <body>
-                <h1>Movie List </h1>
-                <ul>
-                ${allMovies.map(movie => {
-                   return `
-                    <li class="${movie.watched === true ? "watched" : ""}">
-                        <h2>${movie.title}</h2>
-                        ${movie.imbdLink ? `<a target="_blank" href="${movie.imbdLink}">IMBD profile </a>` : ""}
-                        <ul>
-                            ${movie.genres.map(genre => `<li>${genre.name}</li>`).join(" ")}
-                        </ul>
-                        ${movie.watched === false ? `<a href="/movies/${movie.id}/mark-watched"> I watched this. </a>` : ""}
+                        `
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <title>Movie List</title>
+                        <link rel="stylesheet" type="text/css" href="/base-styling.css" />
+                        <link rel="stylesheet" type="text/css" href="/movie-list-style.css" />
+                    </head>
+                    <body>
+                        <h1>Movie List</h1>
+                        <nav>
+                            <a href="/movies?unwatched=1">Only Unwatched</a>
+                            <a href="/movies/feeling-lucky">I'm Feeling Lucky</a>
+                            <a href="/movies/add-movie">Add to Watchlist</a>
+                        </nav>
+                        <ul id="list-of-movies">
+                            ${movies.map((movie) => {
+                                return `
+                                    <li class="${movie.watched === true ? "watched": ""}">
+                                        <h2>${movie.title} ${movie.imdbLink ? `<a target="_blank" href="${movie.imdbLink}">IMDB</a>` : ""}</h2>
 
-                    </li>
-                   `
-                }).join(" ")}
-                </ul>
-                </body>
+                                        <ul class="genres-list">
+                                            ${movie.genres.map(genre => {
+                                                return `<li><a href="/movies?genre=${genre.name}">${genre.name}</a></li>`;
+                                            }).join("")}
+                                        </ul>
+                                        ${movie.watched === false ? `<a class="watch-link" href="/movies/${movie.id}/mark-watched">I watched this!</a>` : ""}
+                                    </li>
+                                `
+                            }).join("")}
+                        </ul>
+                    </body>
+                </html>
             `
-        )
+        );
+        
 
     } catch (e) {
         next(e)
@@ -96,6 +156,7 @@ router.get("/add-movie", async (req, res, next) => {
 `);
 })
 
+// GET responds with updating the movie in the db and updating it to watched & updates on the front end as crossed off
 router.get("/:movieId/mark-watched", async (req, res, next) => {
     const id = req.params.movieId;
     console.log(id, 'THE MOVIE!!!!!!')
@@ -103,7 +164,8 @@ router.get("/:movieId/mark-watched", async (req, res, next) => {
         const theMovie = await Movie.findByPk(id);
         
         if (!theMovie){
-            res.status(404).send('no movie with that id')
+            res.status(404).send('no movie with that id');
+            return;
         }
 
         // setting that specific movie in the db to true
