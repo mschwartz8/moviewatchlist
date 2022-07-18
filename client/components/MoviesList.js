@@ -4,23 +4,21 @@ import axios from "axios";
 
 
 
-class Movie extends React.Component {
+export function Movie (props) {
 
-  render() {
-    const { theMovie } = this.props;
-    return (
-      <li className={theMovie.watched ? "watched" : ""}>
+     return (
+      <li className={props.theMovie.watched ? "watched" : ""}>
         <h2>
           {" "}
-          {theMovie.title}{" "}
-          {theMovie.imbdLink && (
-            <a className='imbd-link' target='_blank' href={theMovie.imbdLink}>
+          {props.theMovie.title}{" "}
+          {props.theMovie.imbdLink && (
+            <a className='imbd-link' target='_blank' href={props.theMovie.imbdLink}>
               IMDB
             </a>
           )}
         </h2>
         <ul className='genres-list'>
-          {theMovie.genres.map((genre) => {
+          {props.theMovie.genres.map((genre) => {
             return (
               <li key={genre.id}>
                 <a>{genre.name}</a>
@@ -30,21 +28,8 @@ class Movie extends React.Component {
         </ul>
       </li>
     );
-  }
-}
 
-// const dummyMovies = [
-//     {
-//       title: "Shawshank Redemption",
-//       watched: false,
-//       genres: [{ name: "Drama" }, { name: "Comedy" }],
-//     },
-//     {
-//       title: "The Dark Knight",
-//       watched: false,
-//       genres: [{ name: "Science Fiction" }, { name: "Comedy" }],
-//     },
-//   ];
+}
 
 export function MovieList (props) {
 
