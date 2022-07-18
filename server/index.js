@@ -48,6 +48,8 @@ app.get("/", (req, res) => {
         <html>
             <head>
                 <title>Movie WatchList App</title>
+                <link rel="stylesheet" type="text/css" href="/base-styling.css" />
+                <link rel="stylesheet" type="text/css" href="/movie-list-style.css" />
             </head>
             <body>
                 <div id="hey-react-put-your-app-here"></div>
