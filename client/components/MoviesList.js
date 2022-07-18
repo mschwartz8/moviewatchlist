@@ -1,19 +1,10 @@
 import React from "react";
+import axios from "axios";
 
-const dummyMovies = [
-  {
-    title: "Shawshank Redemption",
-    watched: false,
-    genres: [{ name: "Drama" }, { name: "Comedy" }],
-  },
-  {
-    title: "The Dark Knight",
-    watched: false,
-    genres: [{ name: "Science Fiction" }, { name: "Comedy" }],
-  },
-];
+
 
 class Movie extends React.Component {
+
   render() {
     const { theMovie } = this.props;
     return (
@@ -22,15 +13,15 @@ class Movie extends React.Component {
           {" "}
           {theMovie.title}{" "}
           {theMovie.imbdLink && (
-            <a class='imbd-link' target='_blank' href={theMovie.imbdLink}>
+            <a className='imbd-link' target='_blank' href={theMovie.imbdLink}>
               IMDB
             </a>
           )}
         </h2>
-        <ul class='genres-list'>
+        <ul className='genres-list'>
           {theMovie.genres.map((genre) => {
             return (
-              <li>
+              <li key={genre.id}>
                 <a>{genre.name}</a>
               </li>
             );
@@ -41,13 +32,47 @@ class Movie extends React.Component {
   }
 }
 
+// const dummyMovies = [
+//     {
+//       title: "Shawshank Redemption",
+//       watched: false,
+//       genres: [{ name: "Drama" }, { name: "Comedy" }],
+//     },
+//     {
+//       title: "The Dark Knight",
+//       watched: false,
+//       genres: [{ name: "Science Fiction" }, { name: "Comedy" }],
+//     },
+//   ];
+
 class MovieList extends React.Component {
-  render() {
+
+    constructor() {
+        super();
+        this.state = {
+            fetchedMovies: null
+        }
+    }
+
+    async componentDidMount () {
+        // this will be refactored later to use thunks
+        const response = await axios.get("/movies");
+        const ourMovies = response.data;
+        this.setState({fetchedMovies: ourMovies})
+
+    }
+
+    render() {
+
+    if (this.state.fetchedMovies === null) {
+        return <h3>Loading...</h3>
+    }
+
     return (
       <div id='movie-list'>
         <ul id='list-of-movies'>
-          {dummyMovies.map((aMovie) => {
-            return <Movie theMovie={aMovie} />;
+          {this.state.fetchedMovies.map((aMovie) => {
+            return <Movie key={aMovie.id} theMovie={aMovie} />;
           })}
         </ul>
       </div>
