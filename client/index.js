@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from "react-dom/client"
 // it's a default export, so you can call it anything you want
 import TheReactApp from "./features/movies/components/App"
 // import {store} from "./store"

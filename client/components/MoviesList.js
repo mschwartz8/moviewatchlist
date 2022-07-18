@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+
 
 
 
@@ -45,75 +46,35 @@ class Movie extends React.Component {
 //     },
 //   ];
 
-class MovieList extends React.Component {
+export function MovieList (props) {
 
-    constructor() {
-        super();
-        this.state = {
-            fetchedMovies: null
-        }
-    }
+  const [movies, setMovies] = useState([])
+   
+  useEffect(() => {
+    const getMovies = async () => {
+      const response = await axios.get('/movies');
+      const newMovies = response.data;
+      setMovies(newMovies);
+    };
+    getMovies();
 
-    async componentDidMount () {
-        // this will be refactored later to use thunks
-        const response = await axios.get("/movies");
-        const ourMovies = response.data;
-        this.setState({fetchedMovies: ourMovies})
-
-    }
-
-    render() {
-
-    if (this.state.fetchedMovies === null) {
-        return <h3>Loading...</h3>
-    }
-
-    return (
+  }, [props.id])
+  
+    if (movies === null){
+      return <h1>"loading...</h1>
+     
+    } else {
+      return (
       <div id='movie-list'>
-        <ul id='list-of-movies'>
-          {this.state.fetchedMovies.map((aMovie) => {
-            return <Movie key={aMovie.id} theMovie={aMovie} />;
-          })}
-        </ul>
-      </div>
-    );
+      <ul id='list-of-movies'>
+        {movies.map((aMovie) => {
+          return <Movie key={aMovie.id} theMovie={aMovie} />;
+        })}
+      </ul>
+    </div>
+      )}
+
   }
-}
 
 export default MovieList;
 
-/*
-               <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Movie List</title>
-                        <link rel="stylesheet" type="text/css" href="/base-styling.css" />
-                        <link rel="stylesheet" type="text/css" href="/movie-list-style.css" />
-                    </head>
-                    <body>
-                        <h1>Movie List</h1>
-                        <nav>
-                            <a href="/movies?unwatched=1">Only Unwatched</a>
-                            <a href="/movies/feeling-lucky">I'm Feeling Lucky</a>
-                            <a href="/movies/add-movie">Add to Watchlist</a>
-                        </nav>
-                        <ul id="list-of-movies">
-                            ${movies.map((movie) => {
-                                return `
-                                    <li class="${movie.watched === true ? "watched": ""}">
-                                        <h2>${movie.title} ${movie.imbdLink ? `<a class='imbd-link' target="_blank" href="${movie.imbdLink}">IMDB</a>` : ""}</h2>
-
-                                        <ul class="genres-list">
-                                            ${movie.genres.map(genre => {
-                                                return `<li><a href="/movies?genre=${genre.name}">${genre.name}</a></li>`;
-                                            }).join("")}
-                                        </ul>
-                                        ${movie.watched === false ? `<a class="watch-link" href="/movies/${movie.id}/mark-watched">I watched this!</a>` : ""}
-                                    </li>
-                                `
-                            }).join("")}
-                        </ul>
-                    </body>
-                </html>
-        
-*/
